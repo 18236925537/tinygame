@@ -15,6 +15,18 @@
             <artifactId>netty-all</artifactId>
             <version>4.1.43.Final</version>
         </dependency>
+        <!--Log4J-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.29</version>
+        </dependency>
+        <!--Protobuf-->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.11.1</version>
+        </dependency>
     </dependencies>
 
     <!--打包配置-->

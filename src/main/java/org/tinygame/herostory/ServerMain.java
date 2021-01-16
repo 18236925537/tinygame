@@ -10,7 +10,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-import sun.misc.JavaAWTAccess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tinygame.herostory.handler.GameMsgHandler;
 
 /**
  * @author zhoupengbing
@@ -22,6 +24,15 @@ import sun.misc.JavaAWTAccess;
  */
 public class ServerMain {
 
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);
+
+    /**
+     * 应用主函数
+     * @param args 参数数组
+     */
     public static void main(String[] args) {
         //定义两个线程池
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -41,7 +52,14 @@ public class ServerMain {
                       //消息长度限制
                       new HttpObjectAggregator(65535),
                       //websocket的server端
-                      new WebSocketServerProtocolHandler("/websocket")
+                      new WebSocketServerProtocolHandler("/websocket"),
+                      //消息解码器
+                      new GameMsgDecoder(),
+                      //消息编码器
+                      new GameMsgEncoder(),
+                      //消息处理类
+                      new GameMsgHandler()
+
               );
             }
         });
@@ -50,7 +68,7 @@ public class ServerMain {
             //绑定服务端口12345
             ChannelFuture future = serverBootstrap.bind(12345).sync();
             if(future.isSuccess()){
-                System.out.println("服务器启动成功");
+                LOGGER.info("服务器启动成功");
             }
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
